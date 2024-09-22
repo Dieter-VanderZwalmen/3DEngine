@@ -1,5 +1,7 @@
 #include <iostream>
 #include <windows.h> // This must be included for Win32 API functions and types
+#include "CustomRenderer/CustomRenderer.cpp"
+#include "DirectXRenderer/DirectXRenderer.cpp"
 
 /// <summary>
 /// global_ variable of a pointer to a single character.
@@ -30,7 +32,23 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     }
 }
 
+enum class RendererType {
+    DirectX,
+    Custom
+};
 
+RendererType currentRenderer = RendererType::DirectX; // or Custom based on your choice
+
+IRenderer* CreateRenderer(RendererType type) {
+    switch (type) {
+    case RendererType::DirectX:
+        return new DirectXRenderer();
+    case RendererType::Custom:
+        return new CustomRenderer();
+    default:
+        return nullptr;
+    }
+}
 
 /// <summary>
 /// Entry point for Windows applications. This is where the program starts execution.
